@@ -7,7 +7,8 @@
 #include "PawnBase.generated.h"
 
 class UCapsuleComponent;
-
+class AProjectileBase;
+class UHealthComponent;
 UCLASS()
 class BATTLETANK_API APawnBase : public APawn
 {
@@ -16,9 +17,11 @@ class BATTLETANK_API APawnBase : public APawn
 public:
 	// Sets default values for this pawn's properties
 	APawnBase();
+	virtual void HandleDestruction();
 
 
 private:
+	//components
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
 	UCapsuleComponent* CapsuleComp;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
@@ -27,4 +30,24 @@ private:
 	UStaticMeshComponent* TurretMesh;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
 	USceneComponent* ProjectileSpawnPoint;
+	// variables
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Projectile Type", meta = (AllowPrivateAccess = "true"))
+	TSubclassOf<AProjectileBase> ProjectileClass;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
+	UHealthComponent* HealthComponent;
+	
+	UPROPERTY(EditAnywhere, Category = "Effects");
+	UParticleSystem* DeathParticle;
+
+	UPROPERTY(EditAnywhere, Category = "Effects")
+	USoundBase* DeathSound;
+
+	UPROPERTY(EditAnywhere,Category = "Effects")
+	TSubclassOf<UCameraShake> DeathShake;
+protected:
+
+	void RotateTurret(FVector LookAtTarget);
+	void Fire();
+
+
 };
